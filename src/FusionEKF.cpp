@@ -100,12 +100,18 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       float ro     = measurement_pack.raw_measurements_(0);
       float phi    = measurement_pack.raw_measurements_(1);
       float ro_dot = measurement_pack.raw_measurements_(2);
-      px = ro     * cos(phi);
-      py = ro     * sin(phi);      
-      vx = ro_dot * cos(phi);
-      vy = ro_dot * sin(phi);
-      
+      float px = ro     * cos(phi);
+      float py = ro     * sin(phi);      
+      float vx = ro_dot * cos(phi);
+      float vy = ro_dot * sin(phi);
+
       ekf_.x_ << px, py, vx, vy;
+      
+      if (fabs(ekf_.x_(0)) < 0.0001 and fabs(ekf_.x_(1)) < 0.0001){
+        ekf_.x_(0) = 0.0001;
+	ekf_.x_(1) = 0.0001;
+      }
+
     }
 
 
